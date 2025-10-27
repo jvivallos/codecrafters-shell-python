@@ -3,13 +3,13 @@ from app.builtin_command import BuiltinCommand
 
 def parse_command(user_input: str):
     if user_input.count(' ') == 0:
-        print("none")
+        #print("none")
         return user_input,
 
     parsed = user_input.partition(" ")
     
     if parsed[1] and parsed[2]:
-        print("command with parameters")
+        #print("command with parameters")
         return parsed[0], parsed[2]
     else:
         return None
