@@ -4,7 +4,7 @@ from app.builtin_command import BuiltinCommand
 def parse_command(user_input: str):
     if user_input.count(' ') == 0:
         #print("none")
-        return user_input,
+        return user_input, None
 
     parsed = user_input.partition(" ")
     
