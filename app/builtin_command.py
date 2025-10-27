@@ -7,7 +7,7 @@ class BuiltinCommand:
         if self.command == "echo":
             print(self.parameters)
         elif self.command == "type":
-            print(f"{ self.command } is a shell builtin")
+            print(f"{ self.parameters } is a shell builtin")
 
     @staticmethod 
     def is_builtin(command):
