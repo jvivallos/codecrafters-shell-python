@@ -18,7 +18,8 @@ class BuiltinCommand:
 
     def _cd(self):
         try:
-            os.chdir(self.parameters)
+            path = os.path.expanduser(self.parameters)
+            os.chdir(path)
         except OSError:
             print(f"cd: {self.parameters}: No such file or directory")
 
