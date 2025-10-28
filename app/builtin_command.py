@@ -1,4 +1,5 @@
 import shutil
+import os.path
 
 class BuiltinCommand:
     def __init__(self, command:str, parameters:str):
@@ -20,8 +21,10 @@ class BuiltinCommand:
             print(self.parameters)
         elif self.command == "type":
             self._type()
+        elif self.command == "pwd":
+            print(os.path.abspath("."))
 
     @staticmethod 
     def is_builtin(command):
         #print(command in ["echo"])
-        return command in ["echo", "exit", "type"]
+        return command in ["echo", "exit", "type", "pwd"]

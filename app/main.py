@@ -23,6 +23,8 @@ def main():
 
         if(user_input.startswith("exit 0")):
             return 0
+        if(user_input == ""):
+            continue
         command_parameters = parse_command(user_input)
         
         command = command_parameters[0]
