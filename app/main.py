@@ -1,5 +1,6 @@
 import sys
 from app.builtin_command import BuiltinCommand
+from app.executable_command import ExecutableCommand
 
 def parse_command(user_input: str):
     if user_input.count(' ') == 0:
@@ -30,7 +31,11 @@ def main():
             builtinCommand = BuiltinCommand(command, parameters)
             builtinCommand.execute()
         else:
-            print("{}: command not found".format(user_input))
+            try:
+                executableCommand = ExecutableCommand(command, parameters)
+                executableCommand.execute()
+            except FileNotFoundError:
+                print("{}: command not found".format(user_input))
         
 
 
