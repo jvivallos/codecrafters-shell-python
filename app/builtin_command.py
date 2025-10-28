@@ -1,5 +1,5 @@
 import shutil
-import os.path
+import os
 
 class BuiltinCommand:
     def __init__(self, command:str, parameters:str):
@@ -16,6 +16,12 @@ class BuiltinCommand:
             else:
                 print(f"{self.parameters}: not found")
 
+    def _cd(self):
+        try:
+            os.chdir(self.parameters)
+        except OSError:
+            print(f"cd: {self.parameters}: No such file or directory")
+
     def execute(self):
         if self.command == "echo":
             print(self.parameters)
@@ -23,8 +29,10 @@ class BuiltinCommand:
             self._type()
         elif self.command == "pwd":
             print(os.path.abspath("."))
+        elif self.command == "cd":
+            self._cd()
 
     @staticmethod 
     def is_builtin(command):
         #print(command in ["echo"])
-        return command in ["echo", "exit", "type", "pwd"]
+        return command in ["echo", "exit", "type", "pwd", "cd"]
