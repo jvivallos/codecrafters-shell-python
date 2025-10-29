@@ -24,10 +24,17 @@ class BuiltinCommand:
         except OSError:
             print(f"cd: {self.parameters}: No such file or directory")
 
-    def _echo(self):
-        text = shlex.split(self.parameters)
+    def _writeToFile(self, filepath, content):
+        file = open(filepath, 'w')
+        file.write(content)
 
-        print(' '.join(text))
+    def _echo(self):
+        params = shlex.split(self.parameters)
+
+        if ">" in params or "1>" in params:
+            self._writeToFile(params[2], f"{params[0]}\n")
+        else:
+            print(' '.join(params))
 
     def execute(self):
         if self.command == "echo":
