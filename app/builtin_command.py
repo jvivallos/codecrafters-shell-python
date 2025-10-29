@@ -1,5 +1,6 @@
 import shutil
 import os
+import shlex
 
 class BuiltinCommand:
     def __init__(self, command:str, parameters:str):
@@ -23,9 +24,14 @@ class BuiltinCommand:
         except OSError:
             print(f"cd: {self.parameters}: No such file or directory")
 
+    def _echo(self):
+        text = shlex.split(self.parameters)
+
+        print(' '.join(text))
+
     def execute(self):
         if self.command == "echo":
-            print(self.parameters)
+            self._echo()
         elif self.command == "type":
             self._type()
         elif self.command == "pwd":
