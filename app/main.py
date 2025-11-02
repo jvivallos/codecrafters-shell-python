@@ -36,8 +36,10 @@ def main():
             try:
                 executableCommand = ExecutableCommand(command, parameters)
                 executableCommand.execute()
-            except FileNotFoundError:
+            except FileNotFoundError as e:
                 print("{}: command not found".format(user_input))
+            except Exception as e:
+                print(e);
         
 
 

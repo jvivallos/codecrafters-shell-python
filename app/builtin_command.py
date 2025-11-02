@@ -25,14 +25,17 @@ class BuiltinCommand:
             print(f"cd: {self.parameters}: No such file or directory")
 
     def _writeToFile(self, filepath, content):
-        file = open(filepath, 'w')
-        file.write(content)
+        with open(filepath, 'w') as file:
+            file.write(content)
 
     def _echo(self):
         params = shlex.split(self.parameters)
 
         if ">" in params or "1>" in params:
             self._writeToFile(params[2], f"{params[0]}\n")
+        elif "2>" in params:
+            self._writeToFile(params[2], "")
+            print(f"{params[0]}")
         else:
             print(' '.join(params))
 
