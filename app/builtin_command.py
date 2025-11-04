@@ -2,10 +2,13 @@ import shutil
 import os
 import shlex
 
+from app.redirectutil import RedirectUtil
+
 class BuiltinCommand:
     def __init__(self, command:str, parameters:str):
         self.command = command
         self.parameters = parameters
+        self.stdout_redirect_commands = {'>', '1>', '1>>', '>>'}
 
     def _type(self):
         if BuiltinCommand.is_builtin(self.parameters):
@@ -24,15 +27,17 @@ class BuiltinCommand:
         except OSError:
             print(f"cd: {self.parameters}: No such file or directory")
 
-    def _writeToFile(self, filepath, content):
-        with open(filepath, 'w') as file:
+    def _writeToFile(self, filepath, content, mode='w'):
+        with open(filepath, mode) as file:
             file.write(content)
 
     def _echo(self):
         params = shlex.split(self.parameters)
 
-        if ">" in params or "1>" in params:
-            self._writeToFile(params[2], f"{params[0]}\n")
+        redirect = RedirectUtil._is_stdout_redirect(params)
+        if redirect[0]:
+            mode = "w" if redirect[1] in ('1>', '>') else "a"
+            self._writeToFile(params[2], f"{params[0]}\n", mode)
         elif "2>" in params:
             self._writeToFile(params[2], "")
             print(f"{params[0]}")
