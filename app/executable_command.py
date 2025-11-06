@@ -17,6 +17,7 @@ class ExecutableCommand:
         args = shlex.split(cmd)
         output_file = None
         redirect = RedirectUtil._is_stdout_redirect(args)
+        redirect_stderr = RedirectUtil._is_stderr_redirect(args)
         
         if redirect[0]:
             mode = "w" if redirect[1] in ('1>', '>') else "a" 
@@ -24,11 +25,12 @@ class ExecutableCommand:
                 args.remove(redirect[1])
                 args.remove(args[len(args) - 1])
                 subprocess.run(args=args, stdout=output_file)
-        elif '2>' in args:
+        elif redirect_stderr[0]:
             #os.system(f"{self.command} {self.parameters}")
             try:
-                with open(args[len(args) - 1], "w") as err_file:
-                    args.remove('2>')
+                mode = "w" if redirect_stderr[1] in ('2>') else "a" 
+                with open(args[len(args) - 1], mode) as err_file:
+                    args.remove(redirect_stderr[1])
                     args.remove(args[len(args) - 1])
                     subprocess.run(args=args, stderr=err_file)
             except Exception as e:
