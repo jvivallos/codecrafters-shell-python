@@ -18,7 +18,6 @@ class ExecutableCommand:
         output_file = None
         redirect = RedirectUtil._is_stdout_redirect(args)
         redirect_stderr = RedirectUtil._is_stderr_redirect(args)
-        
         if redirect[0]:
             mode = "w" if redirect[1] in ('1>', '>') else "a" 
             with open(args[len(args) - 1], mode) as output_file:

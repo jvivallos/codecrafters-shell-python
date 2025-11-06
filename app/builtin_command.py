@@ -35,11 +35,13 @@ class BuiltinCommand:
         params = shlex.split(self.parameters)
 
         redirect = RedirectUtil._is_stdout_redirect(params)
+        redirect_stderr = RedirectUtil._is_stderr_redirect(params)
         if redirect[0]:
             mode = "w" if redirect[1] in ('1>', '>') else "a"
             self._writeToFile(params[2], f"{params[0]}\n", mode)
-        elif "2>" in params:
-            self._writeToFile(params[2], "")
+        elif redirect_stderr[0]:
+            mode = "w" if redirect_stderr[1] in ('2>') else "a" 
+            self._writeToFile(params[2], "", mode)
             print(f"{params[0]}")
         else:
             print(' '.join(params))
