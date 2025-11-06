@@ -1,6 +1,7 @@
 import sys
 from app.builtin_command import BuiltinCommand
 from app.executable_command import ExecutableCommand
+from app.completer import Completer
 
 def parse_command(user_input: str):
     if user_input.count(' ') == 0:
@@ -16,7 +17,7 @@ def parse_command(user_input: str):
         return None
 
 def main():
-    
+    Completer()
     while True:
         sys.stdout.write("$ ")
         user_input = input()
