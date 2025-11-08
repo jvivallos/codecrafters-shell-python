@@ -1,0 +1,23 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run app.main (Pipenv)",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "app.main", // <--- this replaces "-m app.main"
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONUNBUFFERED": "1",
+                "PYDEVD_USE_CYTHON": "NO",
+                "PYDEVD_USE_FRAME_EVAL": "NO",
+                "PYDEVD_DISABLE_SYS_MONITORING": "1"
+            },
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

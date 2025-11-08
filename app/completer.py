@@ -2,7 +2,7 @@ import os
 import readline
 
 class Completer:
-    COMMANDS = ["echo", "exit"]
+    COMMANDS = ["exit"]
 
     def __init__(self):
         self._load_Commands()
@@ -37,5 +37,5 @@ class Completer:
         """
         options = [cmd for cmd in self.COMMANDS if cmd.startswith(text)]
         if state < len(options):
-            return options[state] + " "
+            return options[state] + (" " if len(options) == 1 else "")
         return None

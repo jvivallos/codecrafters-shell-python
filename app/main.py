@@ -19,8 +19,8 @@ def parse_command(user_input: str):
 def main():
     Completer()
     while True:
-        sys.stdout.write("$ ")
-        user_input = input()
+        
+        user_input = input("$ ")
 
         if(user_input.startswith("exit 0")):
             return 0
