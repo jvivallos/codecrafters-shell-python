@@ -1,10 +1,22 @@
+import os
 import readline
 
 class Completer:
     COMMANDS = ["echo", "exit"]
 
     def __init__(self):
+        self._load_Commands()
         self._setup_readline()
+
+    def _load_Commands(self):
+        path_value = os.environ.get("PATH")
+        all_exec = list()
+        for directory in path_value.split(os.pathsep):
+            try:
+                all_exec = all_exec + list(os.listdir(directory))
+            except Exception as e:
+                pass
+        self.COMMANDS = self.COMMANDS + all_exec
 
     def _setup_readline(self):
         # Detect libedit vs GNU readline

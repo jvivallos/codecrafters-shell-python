@@ -34,11 +34,5 @@ class ExecutableCommand:
                     subprocess.run(args=args, stderr=err_file)
             except Exception as e:
                 print(f"The run has failed: {e}")
-            # with open(args[len(args) - 1], "w") as err_file:
-            #     args.remove('2>')
-            #     args.remove(args[len(args) - 1])
-            #     if 'cat' in args:
-            #         subprocess.run(args=args)
-            #     subprocess.run(args=args, stderr=err_file)
         else:
             subprocess.run(args=args)
