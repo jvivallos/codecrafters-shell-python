@@ -2,7 +2,7 @@ import shutil
 import os
 import shlex
 
-from app.redirectutil import RedirectUtil
+from app.command_util import RedirectUtil
 
 class BuiltinCommand:
     def __init__(self, command:str, parameters:str):
@@ -34,11 +34,13 @@ class BuiltinCommand:
     def _echo(self):
         params = shlex.split(self.parameters)
 
-        redirect = RedirectUtil._is_stdout_redirect(params)
-        redirect_stderr = RedirectUtil._is_stderr_redirect(params)
+        redirect = RedirectUtil.is_stdout_redirect(params)
+        redirect_stderr = RedirectUtil.is_stderr_redirect(params)
         if redirect[0]:
             mode = "w" if redirect[1] in ('1>', '>') else "a"
-            self._writeToFile(params[2], f"{params[0]}\n", mode)
+            if '-e' in params:
+                params.remove('-e')
+            self._writeToFile(params[2], f"{self._string_escape(params[0])}\n", mode)
         elif redirect_stderr[0]:
             mode = "w" if redirect_stderr[1] in ('2>') else "a" 
             self._writeToFile(params[2], "", mode)
@@ -55,6 +57,12 @@ class BuiltinCommand:
             print(os.path.abspath("."))
         elif self.command == "cd":
             self._cd()
+
+    def _string_escape(self, s, encoding='utf-8'):
+        return (s.encode('latin1')         # To bytes, required by 'unicode-escape'
+             .decode('unicode-escape') # Perform the actual octal-escaping decode
+             .encode('latin1')         # 1:1 mapping back to bytes
+             .decode(encoding))
 
     @staticmethod 
     def is_builtin(command):
