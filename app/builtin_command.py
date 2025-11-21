@@ -50,9 +50,23 @@ class BuiltinCommand:
             print(' '.join(params))
 
     def _history(self):
-        length = readline.get_current_history_length()
-        for i in range(1, length + 1):
-            print(f"{ i } { readline.get_history_item(i) }")
+        user_length = None
+        length = readline.get_current_history_length() + 1
+        if self.parameters:
+            params = shlex.split(self.parameters)
+            user_length = params[0]
+        if user_length != None and user_length.isnumeric():
+            user_length = int(user_length)
+
+            if user_length > length:
+                user_length = length - 1
+
+            for i in range(length - user_length, length):
+                print(f"{ i } { readline.get_history_item(i) }")
+        else:
+            for i in range(1, length):
+                print(f"{ i } { readline.get_history_item(i) }")
+        
 
     def execute(self):
         if self.command == "echo":
