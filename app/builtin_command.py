@@ -67,4 +67,4 @@ class BuiltinCommand:
     @staticmethod 
     def is_builtin(command):
         #print(command in ["echo"])
-        return command in ["echo", "exit", "type", "pwd", "cd"]
+        return command in ["echo", "exit", "type", "pwd", "cd", "history"]
