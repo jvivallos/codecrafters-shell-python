@@ -7,6 +7,7 @@ class Completer:
     def __init__(self):
         self._load_Commands()
         self._setup_readline()
+        
 
     def _load_Commands(self):
         path_value = os.environ.get("PATH")
@@ -28,6 +29,7 @@ class Completer:
             readline.parse_and_bind("tab: complete")
         readline.set_completer(self._completer)
         readline.set_completer_delims(" \t\n")  # Control word delimiters
+        readline.set_auto_history(True)
 
     def _completer(self, text, state):
         """

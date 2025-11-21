@@ -1,6 +1,7 @@
 import shutil
 import os
 import shlex
+import readline
 
 from app.command_util import RedirectUtil
 
@@ -48,6 +49,11 @@ class BuiltinCommand:
         else:
             print(' '.join(params))
 
+    def _history(self):
+        length = readline.get_current_history_length()
+        for i in range(1, length + 1):
+            print(f"{ i } { readline.get_history_item(i) }")
+
     def execute(self):
         if self.command == "echo":
             self._echo()
@@ -57,6 +63,8 @@ class BuiltinCommand:
             print(os.path.abspath("."))
         elif self.command == "cd":
             self._cd()
+        elif self.command == "history":
+            self._history()
 
     def _string_escape(self, s, encoding='utf-8'):
         return (s.encode('latin1')         # To bytes, required by 'unicode-escape'
