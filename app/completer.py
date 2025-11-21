@@ -2,7 +2,7 @@ import os
 import readline
 
 class Completer:
-    COMMANDS = ["exit"]
+    COMMANDS = ["exit", "history"]
 
     def __init__(self):
         self._load_Commands()
@@ -41,3 +41,7 @@ class Completer:
         if state < len(options):
             return options[state] + (" " if len(options) == 1 else "")
         return None
+
+    @staticmethod
+    def change_history_file(filename):
+        readline.read_history_file(filename)

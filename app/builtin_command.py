@@ -4,6 +4,7 @@ import shlex
 import readline
 
 from app.command_util import RedirectUtil
+from app.completer import Completer
 
 class BuiltinCommand:
     def __init__(self, command:str, parameters:str):
@@ -55,6 +56,7 @@ class BuiltinCommand:
         if self.parameters:
             params = shlex.split(self.parameters)
             user_length = params[0]
+
         if user_length != None and user_length.isnumeric():
             user_length = int(user_length)
 
@@ -63,6 +65,8 @@ class BuiltinCommand:
 
             for i in range(length - user_length, length):
                 print(f"{ i } { readline.get_history_item(i) }")
+        elif self.parameters and params[0] and params[0] == '-r' and params[1]:
+            Completer.change_history_file(params[1])
         else:
             for i in range(1, length):
                 print(f"{ i } { readline.get_history_item(i) }")
