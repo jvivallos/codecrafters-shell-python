@@ -29,11 +29,16 @@ def main():
     history_manager = HistoryManager()
 
     while True:
-        user_input = input("$ ")
+        try:
+            user_input = input("$ ")
+        except EOFError:
+            # Handle Ctrl-D as exit
+            user_input = "exit"
 
         history_manager.sync_last_item()
 
         if user_input.startswith("exit"):
+            history_manager.save()
             return 0
 
         if user_input == "":
