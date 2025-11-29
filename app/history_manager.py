@@ -3,7 +3,9 @@ import readline
 
 class HistoryManager:
     def __init__(self, file_path='~/.python_history'):
-        self.file_path = os.path.expanduser(file_path)
+        # Use HISTFILE if set, otherwise default
+        env_path = os.environ.get("HISTFILE")
+        self.file_path = os.path.expanduser(env_path) if env_path else os.path.expanduser(file_path or "~/.python_history")
         self.commands = []
         self.last_saved_index = 0  # Tracks commands already written to file
         self.load(self.file_path)
