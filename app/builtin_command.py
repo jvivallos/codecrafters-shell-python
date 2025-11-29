@@ -54,17 +54,19 @@ class BuiltinCommand:
 
 
     def _history(self):
-        args = None
-        if self.parameters:
-            args = shlex.split(self.parameters)
+        args = shlex.split(self.parameters) if self.parameters else []
 
-        # No args: show all history
+        # -----------------------
+        # No args: show full history
+        # -----------------------
         if not args:
             for i, cmd in enumerate(self.history_manager.all(), start=1):
                 print(f"{i} {cmd}")
             return
 
-        # history N
+        # -----------------------
+        # history N: show last N commands
+        # -----------------------
         if len(args) == 1 and args[0].isdigit():
             n = int(args[0])
             entries = self.history_manager.tail(n)
@@ -73,14 +75,25 @@ class BuiltinCommand:
                 print(f"{i} {cmd}")
             return
 
-        # history -r file   (read)
+        # -----------------------
+        # history -r file  (read)
+        # -----------------------
         if len(args) == 2 and args[0] == "-r":
             self.history_manager.load(args[1])
             return
 
-        # history -w file   (write)
+        # -----------------------
+        # history -w file  (write/overwrite)
+        # -----------------------
         if len(args) == 2 and args[0] == "-w":
             self.history_manager.save(args[1])
+            return
+
+        # -----------------------
+        # history -a file  (append new lines)
+        # -----------------------
+        if len(args) == 2 and args[0] == "-a":
+            self.history_manager.append_to_file(args[1])
             return
 
 
