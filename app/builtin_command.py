@@ -5,12 +5,14 @@ import readline
 
 from app.command_util import RedirectUtil
 from app.completer import Completer
+from app.history_manager import HistoryManager
 
 class BuiltinCommand:
-    def __init__(self, command:str, parameters:str):
+    def __init__(self, command:str, parameters:str, history_manager:HistoryManager):
         self.command = command
         self.parameters = parameters
         self.stdout_redirect_commands = {'>', '1>', '1>>', '>>'}
+        self.history_manager = history_manager
 
     def _type(self):
         if BuiltinCommand.is_builtin(self.parameters):
@@ -50,26 +52,59 @@ class BuiltinCommand:
         else:
             print(' '.join(params))
 
+
     def _history(self):
-        user_length = None
-        length = readline.get_current_history_length() + 1
+        args = None
         if self.parameters:
-            params = shlex.split(self.parameters)
-            user_length = params[0]
+            args = shlex.split(self.parameters)
 
-        if user_length != None and user_length.isnumeric():
-            user_length = int(user_length)
+        # No args: show all history
+        if not args:
+            for i, cmd in enumerate(self.history_manager.all(), start=1):
+                print(f"{i} {cmd}")
+            return
 
-            if user_length > length:
-                user_length = length - 1
+        # history N
+        if len(args) == 1 and args[0].isdigit():
+            n = int(args[0])
+            entries = self.history_manager.tail(n)
+            start_index = len(self.history_manager.all()) - len(entries) + 1
+            for i, cmd in enumerate(entries, start=start_index):
+                print(f"{i} {cmd}")
+            return
 
-            for i in range(length - user_length, length):
-                print(f"{ i } { readline.get_history_item(i) }")
-        elif self.parameters and params[0] and params[0] == '-r' and params[1]:
-            Completer.change_history_file(params[1])
-        else:
-            for i in range(1, length):
-                print(f"{ i } { readline.get_history_item(i) }")
+        # history -r file   (read)
+        if len(args) == 2 and args[0] == "-r":
+            self.history_manager.load(args[1])
+            return
+
+        # history -w file   (write)
+        if len(args) == 2 and args[0] == "-w":
+            self.history_manager.save(args[1])
+            return
+
+
+
+    # def _history(self):
+    #     user_length = None
+    #     length = readline.get_current_history_length() + 1
+    #     if self.parameters:
+    #         params = shlex.split(self.parameters)
+    #         user_length = params[0]
+
+    #     if user_length != None and user_length.isnumeric():
+    #         user_length = int(user_length)
+
+    #         if user_length > length:
+    #             user_length = length - 1
+
+    #         for i in range(length - user_length, length):
+    #             print(f"{ i } { readline.get_history_item(i) }")
+    #     elif self.parameters and params[0] and params[0] == '-r' and params[1]:
+    #         Completer.change_history_file(params[1])
+    #     else:
+    #         for i in range(1, length):
+    #             print(f"{ i } { readline.get_history_item(i) }")
         
 
     def execute(self):
